@@ -223,7 +223,7 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
               child: const Text(
-                "Add Notebook",
+                "Save",
                 style: TextStyle(
                   fontSize: 16,
                 ),
