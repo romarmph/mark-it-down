@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/alert_title.dart';
 import '../database/notebooks_db_helper.dart';
 import '../constants/colors.dart';
 import '../models/notebooks.dart';
@@ -21,7 +22,7 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.future,
+      future: NotebooksDBHelper.instance.getNotebooks(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(
@@ -56,11 +57,180 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                         style: const TextStyle(fontSize: 16),
                       ),
                       onTap: () {},
-                      onLongPress: () {},
+                      onLongPress: () {
+                        showMenu(notebook);
+                      },
                     );
                   },
                 ).toList(),
               );
+      },
+    );
+  }
+
+  void showMenu(Notebook notebook) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: background,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  onPressed: () {
+                    editDialog(notebook);
+                  },
+                  child: const Text(
+                    "Edit",
+                    style: TextStyle(
+                      color: primary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  onPressed: () {
+                    deleteConfirmation(notebook);
+                  },
+                  child: const Text(
+                    "Delete",
+                    style: TextStyle(
+                      color: danger,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void deleteNotebook(int id) {
+    NotebooksDBHelper.instance.remove(id);
+  }
+
+  void editNotebook(int id) async {
+    if (_notebookController.text.isNotEmpty) {
+      await NotebooksDBHelper.instance.update(
+        Notebook(
+          id: id,
+          name: _notebookController.text,
+        ),
+      );
+    }
+  }
+
+  void deleteConfirmation(Notebook notebook) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: background,
+          title: const AlertTitle(
+            title: "Edit notebook",
+          ),
+          content: Text(
+            "Are you sure to delete $notebook?",
+            style: const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Cancel",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: danger,
+              ),
+              onPressed: () {
+                setState(() {
+                  deleteNotebook(notebook.id!);
+                  _notebookController.clear();
+                });
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              child: const Text(
+                "Yes, delete",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void editDialog(Notebook notebook) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: background,
+          title: const AlertTitle(
+            title: "Edit notebook",
+          ),
+          content: TextField(
+            controller: _notebookController,
+            decoration: InputDecoration(
+              hintText: notebook.name,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Cancel",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primary,
+              ),
+              onPressed: () {
+                setState(() {
+                  editNotebook(notebook.id!);
+                  _notebookController.clear();
+                });
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              child: const Text(
+                "Add Notebook",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        );
       },
     );
   }
