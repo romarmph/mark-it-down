@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mark_it_down/constants/colors.dart';
+
+import '../constants/colors.dart';
 import '../components/drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      drawer: MIDDrawer(),
+      drawer: const MIDDrawer(),
     );
   }
 }

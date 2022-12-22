@@ -34,10 +34,6 @@ class MarkItDown extends StatelessWidget {
         ),
         backgroundColor: background,
         brightness: Brightness.light,
-        buttonTheme: const ButtonThemeData(
-          buttonColor: primary,
-          textTheme: ButtonTextTheme.accent,
-        ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: primary,
           foregroundColor: light,

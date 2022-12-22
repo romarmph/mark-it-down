@@ -6,3 +6,4 @@ const dark = Color(0xFF292C36);
 const light = Color(0xFFFFFFFF);
 const background = Color(0xFFF5F9FC);
 const greyMute = Color(0xFFB5BEC7);
+const danger = Colors.redAccent;
