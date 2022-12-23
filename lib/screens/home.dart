@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 16),
             Expanded(
               child: NotesBuilder(
                 future: DatabaseHelper.instance.getNotes(),
