@@ -16,7 +16,7 @@ class NotebooksDBHelper {
 
   Future<Database> _initDatabase() async {
     Directory dbDirectory = await getApplicationDocumentsDirectory();
-    String path = join(dbDirectory.path, 'notes.db');
+    String path = join(dbDirectory.path, 'mark_id_down.db');
 
     return await openDatabase(
       path,
