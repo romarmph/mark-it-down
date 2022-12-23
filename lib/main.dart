@@ -20,7 +20,7 @@ class MarkItDown extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           actionsIconTheme: IconThemeData(
             color: dark,
-            size: 32,
+            size: 24,
           ),
           backgroundColor: light,
           centerTitle: false,
