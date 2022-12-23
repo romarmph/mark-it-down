@@ -4,7 +4,7 @@ import 'package:mark_it_down/components/notebooks_builder.dart';
 
 import '../components/main_category.dart';
 import '../constants/colors.dart';
-import '../database/notebooks_db_helper.dart';
+import '../database/database_helper.dart';
 import '../models/notebooks.dart';
 
 class MIDDrawer extends StatefulWidget {
@@ -53,7 +53,7 @@ class _MIDDrawerState extends State<MIDDrawer> {
           ),
           Expanded(
             child: NotebooksBuilder(
-              future: NotebooksDBHelper.instance.getNotebooks(),
+              future: DatabaseHelper.instance.getNotebooks(),
             ),
           ),
           Container(
@@ -135,7 +135,7 @@ class _MIDDrawerState extends State<MIDDrawer> {
 
   void addNotebook(String name) async {
     if (name.isNotEmpty) {
-      await NotebooksDBHelper.instance.add(
+      await DatabaseHelper.instance.createNotebook(
         Notebook(
           name: name,
         ),
