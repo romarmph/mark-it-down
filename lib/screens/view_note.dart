@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../database/database_helper.dart';
 import '../constants/colors.dart';
@@ -57,6 +59,45 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
                 color: light,
                 child: Markdown(
                   data: widget.note.content,
+                  extensionSet: md.ExtensionSet(
+                    md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                    [
+                      md.EmojiSyntax(),
+                      ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                    ],
+                  ),
+                  onTapLink: (text, href, title) async {
+                    try {
+                      await launchUrl(Uri.parse(href!));
+                    } catch (e) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                                "You don't have a browser to open this link."),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Okay"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  styleSheet: MarkdownStyleSheet(
+                    code: const TextStyle(
+                      backgroundColor: greyMute,
+                    ),
+                    codeblockDecoration: BoxDecoration(
+                      color: greyMute,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                 ),
               ),
             ),
