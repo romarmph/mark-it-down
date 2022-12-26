@@ -100,6 +100,7 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                     padding: const EdgeInsets.all(16),
                   ),
                   onPressed: () {
+                    Navigator.of(context).pop();
                     deleteConfirmation(notebook);
                   },
                   child: const Text(
@@ -118,8 +119,8 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
     );
   }
 
-  void deleteNotebook(int id) {
-    DatabaseHelper.instance.deleteNotebook(id);
+  void deleteNotebook(int id) async {
+    await DatabaseHelper.instance.deleteNotebook(id);
   }
 
   void editNotebook(int id) async {
@@ -169,7 +170,7 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                   deleteNotebook(notebook.id!);
                   _notebookController.clear();
                 });
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pop();
               },
               child: const Text(
                 "Yes, delete",
