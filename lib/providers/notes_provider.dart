@@ -16,4 +16,14 @@ class NotesProvider extends ChangeNotifier {
     await NotesDBHelper.instance.createNote(note);
     notifyListeners();
   }
+
+  void editNote(Note note) async {
+    await NotesDBHelper.instance.updateNote(note);
+    notifyListeners();
+  }
+
+  void deleteNote(int id) async {
+    await NotesDBHelper.instance.deleteNote(id);
+    notifyListeners();
+  }
 }
