@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../database/notedb_helper.dart';
 import '../models/note.dart';
+import '../providers/notes_provider.dart';
 
 class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({
@@ -17,7 +19,15 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   final _contentController = TextEditingController();
 
   @override
+  void dispose() {
+    _titleController.clear();
+    _contentController.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    NotesProvider provider = Provider.of<NotesProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create note"),
@@ -50,14 +60,13 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          addNote(
-            _titleController.text,
-            content: _contentController.text,
+          provider.addNote(
+            Note(
+              content: _contentController.text,
+              title: _titleController.text,
+              date: DateTime.now().toString(),
+            ),
           );
-          setState(() {
-            _contentController.clear();
-            _titleController.clear();
-          });
           Navigator.of(context).pop();
         },
         child: const Icon(Icons.save),

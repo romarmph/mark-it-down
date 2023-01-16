@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../database/notedb_helper.dart';
 import '../constants/colors.dart';
+import '../models/note.dart';
 import '../providers/notes_provider.dart';
 import '../screens/view_note.dart';
 
@@ -18,80 +19,82 @@ class NotesBuilder extends StatefulWidget {
 class _NotesBuilderState extends State<NotesBuilder> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: NotesDBHelper.instance.getNotes(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: Text("Loading.."),
-          );
-        }
+    return Consumer<NotesProvider>(
+      builder: (context, value, child) => FutureBuilder(
+        future: value.noteList,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text("Loading.."),
+            );
+          }
 
-        return snapshot.data!.isEmpty
-            ? const Center(
-                child: Text(
-                  "You don't have any notes yet",
-                  style: TextStyle(
-                    color: dark,
+          return snapshot.data!.isEmpty
+              ? const Center(
+                  child: Text(
+                    "You don't have any notes yet",
+                    style: TextStyle(
+                      color: dark,
+                    ),
                   ),
-                ),
-              )
-            : ListView(
-                children: snapshot.data!.map(
-                  (note) {
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      clipBehavior: Clip.antiAlias,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      color: light,
-                      elevation: 0,
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(12),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              note.title,
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            Text(
-                              formatDate(note.date),
-                              style: const TextStyle(
-                                color: primary,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                          ],
+                )
+              : ListView(
+                  children: snapshot.data!.map(
+                    (note) {
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        subtitle: Text(
-                          note.content.split('\n').elementAt(0).length > 32
-                              ? note.content.replaceRange(36, null, "...")
-                              : note.content.split('\n').elementAt(0),
-                          style: const TextStyle(
-                            fontSize: 16,
+                        color: light,
+                        elevation: 0,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(12),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                note.title,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Text(
+                                formatDate(note.date),
+                                style: const TextStyle(
+                                  color: primary,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                            ],
                           ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return ViewNoteScreen(note: note);
-                              },
+                          subtitle: Text(
+                            note.content.split('\n').elementAt(0).length > 32
+                                ? note.content.replaceRange(36, null, "...")
+                                : note.content.split('\n').elementAt(0),
+                            style: const TextStyle(
+                              fontSize: 16,
                             ),
-                          );
-                        },
-                        onLongPress: () {},
-                      ),
-                    );
-                  },
-                ).toList(),
-              );
-      },
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return ViewNoteScreen(note: note);
+                                },
+                              ),
+                            );
+                          },
+                          onLongPress: () {},
+                        ),
+                      );
+                    },
+                  ).toList(),
+                );
+        },
+      ),
     );
   }
 

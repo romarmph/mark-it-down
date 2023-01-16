@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mark_it_down/database/notebookdb_helper.dart';
+
+import '../database/notebookdb_helper.dart';
+import '../models/note.dart';
 import '../models/notebooks.dart';
 
 class NotebookProvider extends ChangeNotifier {
