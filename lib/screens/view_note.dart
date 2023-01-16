@@ -5,7 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:url_launcher/url_launcher.dart';
 
-import '../database/database_helper.dart';
+import '../database/notedb_helper.dart';
 import '../constants/colors.dart';
 import '../models/note.dart';
 

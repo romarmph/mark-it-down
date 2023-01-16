@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mark_it_down/database/database_helper.dart';
 
+import '../database/notedb_helper.dart';
 import '../models/note.dart';
 
 class AddNoteScreen extends StatefulWidget {

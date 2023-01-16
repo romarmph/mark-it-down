@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mark_it_down/components/notes_builder.dart';
-import 'package:mark_it_down/database/database_helper.dart';
+import 'package:provider/provider.dart';
 
+import '../components/notes_builder.dart';
 import '../constants/colors.dart';
 import '../components/drawer.dart';
+import '../providers/notes_provider.dart';
 import '../screens/add_note.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,9 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: NotesBuilder(
-                future: NotesDBHelper.instance.getNotes(),
+            Consumer<NotesProvider>(
+              builder: (context, value, child) => const Expanded(
+                child: NotesBuilder(),
               ),
             ),
           ],

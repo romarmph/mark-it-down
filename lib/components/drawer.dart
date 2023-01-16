@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mark_it_down/components/alert_title.dart';
-import 'package:mark_it_down/components/notebooks_builder.dart';
 
+import '../components/alert_title.dart';
 import '../components/main_category.dart';
+import '../components/notebooks_builder.dart';
 import '../constants/colors.dart';
-import '../database/database_helper.dart';
 import '../database/notebookdb_helper.dart';
 import '../models/notebooks.dart';
 

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../database/database_helper.dart';
+import '../database/notedb_helper.dart';
 import '../constants/colors.dart';
-import '../models/note.dart';
+import '../providers/notes_provider.dart';
 import '../screens/view_note.dart';
 
 class NotesBuilder extends StatefulWidget {
   const NotesBuilder({
     super.key,
-    this.future,
   });
-
-  final Future<List<Note>>? future;
 
   @override
   State<NotesBuilder> createState() => _NotesBuilderState();
