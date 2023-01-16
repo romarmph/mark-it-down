@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mark_it_down/providers/notes_provider.dart';
+import 'package:mark_it_down/screens/edit_note.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../database/notedb_helper.dart';
 import '../constants/colors.dart';
 import '../models/note.dart';
 
@@ -35,76 +35,101 @@ class ViewNoteScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: [
-            Container(
-              color: light,
-              child: ListTile(
-                title: Text(
-                  note.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                subtitle: Text(formatDate(note.date)),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Container(
-                color: light,
-                child: Markdown(
-                  data: note.content,
-                  extensionSet: md.ExtensionSet(
-                    md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-                    [
-                      md.EmojiSyntax(),
-                      ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+      body: Consumer<NotesProvider>(
+        builder: (context, value, child) {
+          return FutureBuilder(
+            future: value.noteList,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.none) {
+                final int? index = snapshot.data
+                    ?.indexWhere((element) => element.id == note.id);
+
+                return Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      Container(
+                        color: light,
+                        child: ListTile(
+                          title: Text(
+                            snapshot.data?[index!].title ?? "",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Text(formatDate(note.date)),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: Container(
+                          color: light,
+                          child: Markdown(
+                            data: snapshot.data?[index!].content ?? "",
+                            extensionSet: md.ExtensionSet(
+                              md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                              [
+                                md.EmojiSyntax(),
+                                ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                              ],
+                            ),
+                            onTapLink: (text, href, title) async {
+                              try {
+                                await launchUrl(Uri.parse(href!));
+                              } catch (e) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                          "You don't have a browser to open this link."),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("Okay"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            styleSheet: MarkdownStyleSheet(
+                              code: const TextStyle(
+                                backgroundColor: greyMute,
+                              ),
+                              codeblockDecoration: BoxDecoration(
+                                color: greyMute,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  onTapLink: (text, href, title) async {
-                    try {
-                      await launchUrl(Uri.parse(href!));
-                    } catch (e) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text(
-                                "You don't have a browser to open this link."),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Okay"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
-                  styleSheet: MarkdownStyleSheet(
-                    code: const TextStyle(
-                      backgroundColor: greyMute,
-                    ),
-                    codeblockDecoration: BoxDecoration(
-                      color: greyMute,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => EditNoteScreen(
+                note: note,
+              ),
+            ),
+          );
+        },
         child: const Icon(Icons.edit),
       ),
     );
@@ -153,10 +178,6 @@ class ViewNoteScreen extends StatelessWidget {
         );
       },
     );
-  }
-
-  void deleteNote(int id) {
-    NotesDBHelper.instance.deleteNote(id);
   }
 
   String formatDate(String data) {
