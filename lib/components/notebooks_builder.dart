@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mark_it_down/providers/notebook_provider.dart';
+import 'package:provider/provider.dart';
+
 import '../components/alert_title.dart';
 import '../database/notebookdb_helper.dart';
 import '../constants/colors.dart';
@@ -7,10 +10,7 @@ import '../models/notebooks.dart';
 class NotebooksBuilder extends StatefulWidget {
   const NotebooksBuilder({
     super.key,
-    this.future,
   });
-
-  final Future<List<Notebook>>? future;
 
   @override
   State<NotebooksBuilder> createState() => _NotebooksBuilderState();
@@ -21,50 +21,52 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: NotebookDBHelper.instance.getNotebooks(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: Text("Loading.."),
-          );
-        }
+    return Consumer<NotebookProvider>(
+      builder: (context, value, child) => FutureBuilder(
+        future: value.notebookList,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text("Loading.."),
+            );
+          }
 
-        return snapshot.data!.isEmpty
-            ? const Center(
-                child: Text(
-                  "Add your first notebook now",
-                  style: TextStyle(
-                    color: light,
+          return snapshot.data!.isEmpty
+              ? const Center(
+                  child: Text(
+                    "Add your first notebook now",
+                    style: TextStyle(
+                      color: light,
+                    ),
                   ),
-                ),
-              )
-            : ListView(
-                children: snapshot.data!.map(
-                  (notebook) {
-                    return ListTile(
-                      contentPadding: const EdgeInsets.only(
-                        left: 32,
-                      ),
-                      iconColor: light,
-                      textColor: light,
-                      minLeadingWidth: 0,
-                      leading: const Icon(
-                        Icons.book,
-                      ),
-                      title: Text(
-                        notebook.name,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      onTap: () {},
-                      onLongPress: () {
-                        showMenu(notebook);
-                      },
-                    );
-                  },
-                ).toList(),
-              );
-      },
+                )
+              : ListView(
+                  children: snapshot.data!.map(
+                    (notebook) {
+                      return ListTile(
+                        contentPadding: const EdgeInsets.only(
+                          left: 32,
+                        ),
+                        iconColor: light,
+                        textColor: light,
+                        minLeadingWidth: 0,
+                        leading: const Icon(
+                          Icons.book,
+                        ),
+                        title: Text(
+                          notebook.name,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        onTap: () {},
+                        onLongPress: () {
+                          showMenu(notebook);
+                        },
+                      );
+                    },
+                  ).toList(),
+                );
+        },
+      ),
     );
   }
 

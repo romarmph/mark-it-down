@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/alert_title.dart';
 import '../components/main_category.dart';
 import '../components/notebooks_builder.dart';
 import '../constants/colors.dart';
 import '../database/notebookdb_helper.dart';
+import '../providers/notebook_provider.dart';
 import '../models/notebooks.dart';
 
 class MIDDrawer extends StatefulWidget {
@@ -51,10 +53,8 @@ class _MIDDrawerState extends State<MIDDrawer> {
             title: "Notebooks",
             leading: Icons.library_books,
           ),
-          Expanded(
-            child: NotebooksBuilder(
-              future: NotebookDBHelper.instance.getNotebooks(),
-            ),
+          const Expanded(
+            child: NotebooksBuilder(),
           ),
           Container(
             height: 74,
@@ -114,10 +114,15 @@ class _MIDDrawerState extends State<MIDDrawer> {
                 backgroundColor: primary,
               ),
               onPressed: () {
-                addNotebook(_notebookController.text);
-                setState(() {
-                  _notebookController.clear();
-                });
+                NotebookProvider provider = Provider.of<NotebookProvider>(
+                  context,
+                  listen: false,
+                );
+                provider.addNotebook(
+                  Notebook(
+                    name: _notebookController.text,
+                  ),
+                );
                 Navigator.of(context).pop();
               },
               child: const Text(
@@ -131,15 +136,5 @@ class _MIDDrawerState extends State<MIDDrawer> {
         );
       },
     );
-  }
-
-  void addNotebook(String name) async {
-    if (name.isNotEmpty) {
-      await NotebookDBHelper.instance.createNotebook(
-        Notebook(
-          name: name,
-        ),
-      );
-    }
   }
 }
