@@ -3,7 +3,6 @@ import 'package:mark_it_down/providers/notebook_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../components/alert_title.dart';
-import '../database/notebookdb_helper.dart';
 import '../constants/colors.dart';
 import '../models/notebooks.dart';
 
@@ -121,21 +120,6 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
     );
   }
 
-  void deleteNotebook(int id) async {
-    await NotebookDBHelper.instance.deleteNotebook(id);
-  }
-
-  void editNotebook(int id) async {
-    if (_notebookController.text.isNotEmpty) {
-      await NotebookDBHelper.instance.updateNotebook(
-        Notebook(
-          id: id,
-          name: _notebookController.text,
-        ),
-      );
-    }
-  }
-
   void deleteConfirmation(Notebook notebook) {
     showDialog(
       context: context,
@@ -168,10 +152,10 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                 backgroundColor: danger,
               ),
               onPressed: () {
-                setState(() {
-                  deleteNotebook(notebook.id!);
-                  _notebookController.clear();
-                });
+                NotebookProvider provider =
+                    Provider.of<NotebookProvider>(context, listen: false);
+                provider.deleteNotebook(notebook.id!);
+
                 Navigator.of(context).pop();
               },
               child: const Text(
@@ -219,11 +203,23 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                 backgroundColor: primary,
               ),
               onPressed: () {
-                setState(() {
-                  editNotebook(notebook.id!);
-                  _notebookController.clear();
-                });
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                NotebookProvider provider = Provider.of<NotebookProvider>(
+                  context,
+                  listen: false,
+                );
+                if (_notebookController.text.isNotEmpty) {
+                  Navigator.of(context).pop();
+                  provider.editNotebook(
+                    Notebook(
+                      id: notebook.id,
+                      name: _notebookController.text,
+                    ),
+                  );
+                  setState(() {
+                    _notebookController.clear();
+                  });
+                }
+                Navigator.of(context).pop();
               },
               child: const Text(
                 "Save",
