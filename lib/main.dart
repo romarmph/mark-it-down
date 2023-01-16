@@ -76,7 +76,10 @@ class MarkItDown extends StatelessWidget {
           ),
           primaryColor: primary,
         ),
-        home: const HomeScreen(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const HomeScreen(),
+        },
       ),
     );
   }

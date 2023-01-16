@@ -123,6 +123,9 @@ class _MIDDrawerState extends State<MIDDrawer> {
                     name: _notebookController.text,
                   ),
                 );
+                setState(() {
+                  _notebookController.clear();
+                });
                 Navigator.of(context).pop();
               },
               child: const Text(

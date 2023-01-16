@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -48,6 +49,21 @@ CREATE TABLE tbl_notes(
         : [];
 
     return notesList;
+  }
+
+  Future<Note> getSingleNote(int id) async {
+    Database db = await instance.database;
+
+    var notes = await db.query(
+      'tbl_notes',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    List<Note> notesList = notes.isNotEmpty
+        ? notes.map((note) => Note.fromMap(note)).toList()
+        : [];
+
+    return notesList[0];
   }
 
   Future<int> createNote(Note note) async {

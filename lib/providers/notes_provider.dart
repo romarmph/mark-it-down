@@ -12,6 +12,10 @@ class NotesProvider extends ChangeNotifier {
     return _noteList;
   }
 
+  Future<Note> getNote(int id) async {
+    return await NotesDBHelper.instance.getSingleNote(id);
+  }
+
   void addNote(Note note) async {
     await NotesDBHelper.instance.createNote(note);
     notifyListeners();
