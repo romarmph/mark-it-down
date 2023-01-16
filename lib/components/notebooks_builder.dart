@@ -40,6 +40,7 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                   ),
                 )
               : ListView(
+                  padding: EdgeInsets.zero,
                   children: snapshot.data!.map(
                     (notebook) {
                       return ListTile(
