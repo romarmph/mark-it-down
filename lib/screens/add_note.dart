@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mark_it_down/components/dropdown.dart';
-import 'package:mark_it_down/constants/colors.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/notebook_provider.dart';
-import '../database/notedb_helper.dart';
 import '../models/note.dart';
 import '../providers/notes_provider.dart';
 
@@ -20,8 +17,6 @@ class AddNoteScreen extends StatefulWidget {
 class _AddNoteScreenState extends State<AddNoteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-
-  var selectedNotebook;
 
   @override
   void dispose() {
