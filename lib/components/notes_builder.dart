@@ -21,7 +21,7 @@ class _NotesBuilderState extends State<NotesBuilder> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DatabaseHelper.instance.getNotes(),
+      future: NotesDBHelper.instance.getNotes(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(

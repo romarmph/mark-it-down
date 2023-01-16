@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../components/alert_title.dart';
-import '../database/database_helper.dart';
+import '../database/notebookdb_helper.dart';
 import '../constants/colors.dart';
 import '../models/notebooks.dart';
 
@@ -22,7 +22,7 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: DatabaseHelper.instance.getNotebooks(),
+      future: NotebookDBHelper.instance.getNotebooks(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(
@@ -120,12 +120,12 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
   }
 
   void deleteNotebook(int id) async {
-    await DatabaseHelper.instance.deleteNotebook(id);
+    await NotebookDBHelper.instance.deleteNotebook(id);
   }
 
   void editNotebook(int id) async {
     if (_notebookController.text.isNotEmpty) {
-      await DatabaseHelper.instance.updateNotebook(
+      await NotebookDBHelper.instance.updateNotebook(
         Notebook(
           id: id,
           name: _notebookController.text,

@@ -156,7 +156,7 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
   }
 
   void deleteNote(int id) {
-    DatabaseHelper.instance.deleteNote(id);
+    NotesDBHelper.instance.deleteNote(id);
   }
 
   String formatDate(String data) {

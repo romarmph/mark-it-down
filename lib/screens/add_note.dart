@@ -67,7 +67,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
   void addNote(String title, {String content = ""}) async {
     if (title.isNotEmpty) {
-      await DatabaseHelper.instance.createNote(
+      await NotesDBHelper.instance.createNote(
         Note(
           title: title,
           date: DateTime.now().toString(),
