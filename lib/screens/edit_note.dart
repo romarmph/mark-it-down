@@ -28,13 +28,6 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   }
 
   @override
-  void dispose() {
-    _titleController.clear();
-    _contentController.clear();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
