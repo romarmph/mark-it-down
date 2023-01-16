@@ -11,7 +11,7 @@ import '../database/notedb_helper.dart';
 import '../constants/colors.dart';
 import '../models/note.dart';
 
-class ViewNoteScreen extends StatefulWidget {
+class ViewNoteScreen extends StatelessWidget {
   const ViewNoteScreen({
     super.key,
     required this.note,
@@ -20,18 +20,13 @@ class ViewNoteScreen extends StatefulWidget {
   final Note note;
 
   @override
-  State<ViewNoteScreen> createState() => _ViewNoteScreenState();
-}
-
-class _ViewNoteScreenState extends State<ViewNoteScreen> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
             onPressed: () {
-              showDeleteDialog(widget.note);
+              showDeleteDialog(note, context);
             },
             icon: const Icon(
               Icons.delete,
@@ -48,13 +43,13 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
               color: light,
               child: ListTile(
                 title: Text(
-                  widget.note.title,
+                  note.title,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                subtitle: Text(formatDate(widget.note.date)),
+                subtitle: Text(formatDate(note.date)),
               ),
             ),
             const SizedBox(height: 16),
@@ -62,7 +57,7 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
               child: Container(
                 color: light,
                 child: Markdown(
-                  data: widget.note.content,
+                  data: note.content,
                   extensionSet: md.ExtensionSet(
                     md.ExtensionSet.gitHubFlavored.blockSyntaxes,
                     [
@@ -115,7 +110,7 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
     );
   }
 
-  void showDeleteDialog(Note note) {
+  void showDeleteDialog(Note note, BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
