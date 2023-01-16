@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mark_it_down/providers/notes_provider.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../database/notedb_helper.dart';
@@ -137,10 +139,13 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
                 backgroundColor: danger,
               ),
               onPressed: () {
-                setState(() {
-                  deleteNote(note.id!);
-                });
-                Navigator.of(context).popAndPushNamed('/');
+                Navigator.of(context).pop();
+                NotesProvider provider = Provider.of<NotesProvider>(
+                  context,
+                  listen: false,
+                );
+                provider.deleteNote(note.id!);
+                Navigator.of(context).pop();
               },
               child: const Text(
                 "Yes, delete",
