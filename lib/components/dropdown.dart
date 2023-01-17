@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mark_it_down/constants/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/notebook_provider.dart';
 
@@ -50,7 +51,9 @@ class _NotebookDropdownState extends State<NotebookDropdown> {
             menuMaxHeight: 400,
             value: selectedNotebook,
             items: itemList,
-            onChanged: (value) {
+            onChanged: (value) async {
+              final shared = await SharedPreferences.getInstance();
+              shared.setInt('notebook_id', selectedNotebook);
               setState(() {
                 selectedNotebook = value;
               });
