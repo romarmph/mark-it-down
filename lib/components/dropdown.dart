@@ -18,7 +18,10 @@ class _NotebookDropdownState extends State<NotebookDropdown> {
   Widget build(BuildContext context) {
     NotebookProvider notebookProvider = Provider.of<NotebookProvider>(context);
     return Container(
-      color: light,
+      decoration: BoxDecoration(
+        color: light,
+        borderRadius: BorderRadius.circular(8),
+      ),
       padding: const EdgeInsets.all(14),
       width: double.infinity,
       height: 48,
@@ -41,6 +44,9 @@ class _NotebookDropdownState extends State<NotebookDropdown> {
             ),
           );
           return DropdownButton(
+            elevation: 2,
+            borderRadius: BorderRadius.circular(8),
+            isExpanded: true,
             menuMaxHeight: 400,
             value: selectedNotebook,
             items: itemList,
