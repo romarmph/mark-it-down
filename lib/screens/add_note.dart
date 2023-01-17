@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mark_it_down/components/dropdown.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/dropdown.dart';
 import '../models/note.dart';
 import '../providers/notes_provider.dart';
 
@@ -17,6 +18,7 @@ class AddNoteScreen extends StatefulWidget {
 class _AddNoteScreenState extends State<AddNoteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
+  int _notebookID = 0;
 
   @override
   void dispose() {
@@ -63,17 +65,24 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_titleController.text.isNotEmpty) {
-            noteProvider.addNote(
-              Note(
-                content: _contentController.text,
-                title: _titleController.text,
-                date: DateTime.now().toString(),
-              ),
-            );
+            addNote(noteProvider);
           }
           Navigator.of(context).pop();
         },
         child: const Icon(Icons.save),
+      ),
+    );
+  }
+
+  void addNote(NotesProvider noteProvider) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    noteProvider.addNote(
+      Note(
+        content: _contentController.text,
+        title: _titleController.text,
+        date: DateTime.now().toString(),
+        notebookID: prefs.getInt('notebookID')!,
       ),
     );
   }

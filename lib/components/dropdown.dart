@@ -53,8 +53,8 @@ class _NotebookDropdownState extends State<NotebookDropdown> {
             items: itemList,
             onChanged: (value) async {
               final shared = await SharedPreferences.getInstance();
-              shared.setInt('notebook_id', selectedNotebook);
               setState(() {
+                shared.setInt('notebookID', value);
                 selectedNotebook = value;
               });
             },

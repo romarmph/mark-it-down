@@ -79,6 +79,7 @@ class _NotesBuilderState extends State<NotesBuilder> {
                           ),
                         ),
                         onTap: () {
+                          print(note.notebookID);
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {

@@ -5,7 +5,6 @@ import '../components/alert_title.dart';
 import '../components/main_category.dart';
 import '../components/notebooks_builder.dart';
 import '../constants/colors.dart';
-import '../database/notebookdb_helper.dart';
 import '../providers/notebook_provider.dart';
 import '../models/notebooks.dart';
 
