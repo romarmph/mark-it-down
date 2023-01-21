@@ -50,6 +50,22 @@ CREATE TABLE tbl_notes(
     return notesList;
   }
 
+  Future<List<Note>> getNotesByID(int id) async {
+    Database db = await instance.database;
+
+    var notes = await db.query(
+      'tbl_notes',
+      orderBy: 'id',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    List<Note> notesList = notes.isNotEmpty
+        ? notes.map((note) => Note.fromMap(note)).toList()
+        : [];
+
+    return notesList;
+  }
+
   Future<Note> getSingleNote(int id) async {
     Database db = await instance.database;
 
