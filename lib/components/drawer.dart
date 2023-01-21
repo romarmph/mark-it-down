@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mark_it_down/providers/notes_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../components/alert_title.dart';
@@ -46,7 +47,15 @@ class _MIDDrawerState extends State<MIDDrawer> {
           MainCategory(
             leading: Icons.list_alt,
             title: "All notes",
-            onTap: () {},
+            onTap: () {
+              final provider = Provider.of<NotesProvider>(
+                context,
+                listen: false,
+              );
+
+              provider.setNotebookID = 0;
+              Navigator.of(context).pop();
+            },
           ),
           const MainCategory(
             title: "Notebooks",
