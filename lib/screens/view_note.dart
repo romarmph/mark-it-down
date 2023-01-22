@@ -167,7 +167,7 @@ class ViewNoteScreen extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => EditNoteScreen(
-                  note: passed,
+                  noteID: passed.id!,
                 ),
               ),
             );

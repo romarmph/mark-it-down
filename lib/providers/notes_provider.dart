@@ -8,10 +8,17 @@ class NotesProvider extends ChangeNotifier {
   List<Note> _noteList = [];
   int _selectedNotebook = 0;
   String _selectedNotebookName = "";
+  String _searchText = "";
 
   String get selectedNotebookName => _selectedNotebookName;
   int get selectedNotebook => _selectedNotebook;
   int get notebookID => _notebookID;
+  String get searchText => _searchText;
+
+  set searchText(String searchText) {
+    _searchText = searchText;
+    notifyListeners();
+  }
 
   set selectedNotebookName(String name) {
     _selectedNotebookName = name;
@@ -28,8 +35,8 @@ class NotesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Note>> noteList(int notebookID) async {
-    _noteList = await NotesDBHelper.instance.getNotes(_notebookID);
+  Future<List<Note>> noteList(int notebookID, String searchText) async {
+    _noteList = await NotesDBHelper.instance.getNotes(_notebookID, searchText);
 
     notifyListeners();
     return _noteList;

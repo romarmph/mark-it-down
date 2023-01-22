@@ -39,13 +39,17 @@ CREATE TABLE tbl_notes(
     await db.execute(notes);
   }
 
-  Future<List<Note>> getNotes(int id) async {
+  Future<List<Note>> getNotes(int id, String searchText) async {
     Database db = await instance.database;
 
     var notes = [];
 
-    if (id == 0) {
+    if (id == 0 && searchText.isEmpty) {
       notes = await db.query('tbl_notes', orderBy: 'id');
+    } else if (searchText.isNotEmpty && id == 0) {
+      notes = await db.query('tbl_notes',
+          where: 'title LIKE ? AND content LIKE ?',
+          whereArgs: ['%$searchText%', '%$searchText%']);
     } else {
       notes = await db.query(
         'tbl_notes',

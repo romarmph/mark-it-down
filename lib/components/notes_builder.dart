@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mark_it_down/providers/notebook_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/notebook_provider.dart';
 import '../constants/colors.dart';
 import '../providers/notes_provider.dart';
 import '../screens/view_note.dart';
@@ -25,11 +25,17 @@ class _NotesBuilderState extends State<NotesBuilder> {
     );
     return Consumer<NotesProvider>(
       builder: (context, value, child) => FutureBuilder(
-        future: value.noteList(value.notebookID),
+        future: value.noteList(value.notebookID, value.searchText),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
               child: Text("Loading.."),
+            );
+          }
+
+          if (snapshot.data!.isEmpty && value.searchText.isNotEmpty) {
+            return const Center(
+              child: Text("Note not found"),
             );
           }
 

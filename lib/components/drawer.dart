@@ -53,6 +53,7 @@ class _MIDDrawerState extends State<MIDDrawer> {
                 listen: false,
               );
 
+              provider.searchText = "";
               provider.setNotebookID = 0;
               Navigator.of(context).pop();
             },

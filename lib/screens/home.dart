@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/notes_provider.dart';
 import '../components/notes_builder.dart';
 import '../constants/colors.dart';
 import '../components/drawer.dart';
@@ -17,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<NotesProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: background,
@@ -27,13 +30,30 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             TextField(
+              onChanged: (value) {
+                if (_searchController.text.isNotEmpty) {
+                  provider.searchText = _searchController.text;
+                  provider.setNotebookID = 0;
+                } else {
+                  provider.searchText = "";
+                  provider.setNotebookID = 0;
+                }
+              },
               textAlignVertical: TextAlignVertical.center,
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: "Search Notes",
                 suffixIcon: IconButton(
                   focusColor: primaryLight,
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_searchController.text.isNotEmpty) {
+                      provider.searchText = _searchController.text;
+                      provider.setNotebookID = 0;
+                    } else {
+                      provider.searchText = "";
+                      provider.setNotebookID = 0;
+                    }
+                  },
                   icon: const Icon(
                     Icons.search,
                   ),
