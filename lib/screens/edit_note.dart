@@ -71,6 +71,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
               content: _contentController.text,
               title: _titleController.text,
               date: DateTime.now().toString(),
+              notebookID: widget.note.notebookID,
             ),
           );
           Navigator.of(context).pop();
