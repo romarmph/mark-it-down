@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mark_it_down/constants/colors.dart';
-import 'package:mark_it_down/models/notebooks.dart';
 import 'package:mark_it_down/providers/notebook_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +29,6 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   @override
   Widget build(BuildContext context) {
     NotesProvider noteProvider = Provider.of<NotesProvider>(context);
-    NotebookProvider notebookProvider = Provider.of<NotebookProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create note"),
@@ -102,6 +100,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
             addNote(noteProvider);
           }
           noteProvider.selectedNotebookName = "";
+          noteProvider.selectedNotebook = 0;
           Navigator.of(context).pop();
         },
         child: const Icon(Icons.save),
@@ -137,25 +136,28 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: Consumer<NotebookProvider>(
-                      builder: (context, provider, child) {
-                        return FutureBuilder(
-                          future: provider.notebookList,
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return const Center(
-                                child: Text("No notebooks available"),
-                              );
-                            }
-                            return Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              elevation: 16,
-                              child: ListView.builder(
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 16,
+                      child: Consumer<NotebookProvider>(
+                        builder: (context, provider, child) {
+                          return FutureBuilder(
+                            future: provider.notebookList,
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                return const Center(
+                                  child: Text("No notebooks available"),
+                                );
+                              }
+                              return ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
                                   return TextButton(
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.all(16),
+                                    ),
                                     onPressed: () {
                                       final noteProvider =
                                           Provider.of<NotesProvider>(
@@ -179,11 +181,11 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                                     ),
                                   );
                                 },
-                              ),
-                            );
-                          },
-                        );
-                      },
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -196,7 +198,9 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         )),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     child: const Text(
                       "Cancel",
                       style: TextStyle(

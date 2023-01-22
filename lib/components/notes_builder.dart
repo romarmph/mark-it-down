@@ -89,7 +89,8 @@ class _NotesBuilderState extends State<NotesBuilder> {
                                         note.notebookID!,
                                       ),
                                       builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
+                                        if (!snapshot.hasData ||
+                                            snapshot.data!.isEmpty) {
                                           return Container();
                                         }
                                         return Text(
