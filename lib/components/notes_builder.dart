@@ -86,7 +86,7 @@ class _NotesBuilderState extends State<NotesBuilder> {
                                     ),
                                     child: FutureBuilder(
                                       future: notebookProvider.notebookName(
-                                        note.notebookID!,
+                                        note.notebookID ?? 0,
                                       ),
                                       builder: (context, snapshot) {
                                         if (!snapshot.hasData ||
