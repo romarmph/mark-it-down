@@ -59,21 +59,14 @@ class _NotesBuilderState extends State<NotesBuilder> {
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              note!.title,
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
                             Row(
                               children: [
                                 Expanded(
-                                  flex: 8,
+                                  flex: 6,
                                   child: Text(
-                                    formatDate(DateTime.parse(note.date)),
+                                    note!.title,
                                     style: const TextStyle(
-                                      color: primary,
-                                      fontSize: 14,
+                                      fontSize: 18,
                                     ),
                                   ),
                                 ),
@@ -82,7 +75,8 @@ class _NotesBuilderState extends State<NotesBuilder> {
                                   child: Container(
                                     padding: const EdgeInsets.all(4),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
+                                      color: primaryLight,
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: FutureBuilder(
                                       future: notebookProvider.notebookName(
@@ -95,12 +89,23 @@ class _NotesBuilderState extends State<NotesBuilder> {
                                         }
                                         return Text(
                                           snapshot.data!,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            color: light,
+                                          ),
                                         );
                                       },
                                     ),
                                   ),
                                 ),
                               ],
+                            ),
+                            Text(
+                              formatDate(DateTime.parse(note.date)),
+                              style: const TextStyle(
+                                color: primary,
+                                fontSize: 14,
+                              ),
                             ),
                             const SizedBox(height: 8),
                           ],
