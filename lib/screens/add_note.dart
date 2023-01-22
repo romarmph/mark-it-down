@@ -141,50 +141,71 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       elevation: 16,
-                      child: Consumer<NotebookProvider>(
-                        builder: (context, provider, child) {
-                          return FutureBuilder(
-                            future: provider.notebookList,
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                return const Center(
-                                  child: Text("No notebooks available"),
-                                );
-                              }
-                              return ListView.builder(
-                                itemCount: snapshot.data!.length,
-                                itemBuilder: (context, index) {
-                                  return TextButton(
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.all(16),
-                                    ),
-                                    onPressed: () {
-                                      final noteProvider =
-                                          Provider.of<NotesProvider>(
-                                        context,
-                                        listen: false,
-                                      );
-
-                                      noteProvider.selectedNotebookName =
-                                          snapshot.data![index].name;
-                                      noteProvider.selectedNotebook =
-                                          snapshot.data![index].id!;
-
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      snapshot.data![index].name,
-                                      style: const TextStyle(
-                                        color: primary,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  );
-                                },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              final noteProvider = Provider.of<NotesProvider>(
+                                context,
+                                listen: false,
                               );
+
+                              noteProvider.selectedNotebookName = "";
+                              noteProvider.selectedNotebook = 0;
+                              Navigator.of(context).pop();
                             },
-                          );
-                        },
+                            child: const Text("None"),
+                          ),
+                          Expanded(
+                            child: Consumer<NotebookProvider>(
+                              builder: (context, provider, child) {
+                                return FutureBuilder(
+                                  future: provider.notebookList,
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData ||
+                                        snapshot.data!.isEmpty) {
+                                      return const Center(
+                                        child: Text("No notebooks available"),
+                                      );
+                                    }
+                                    return ListView.builder(
+                                      itemCount: snapshot.data!.length,
+                                      itemBuilder: (context, index) {
+                                        return TextButton(
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.all(16),
+                                          ),
+                                          onPressed: () {
+                                            final noteProvider =
+                                                Provider.of<NotesProvider>(
+                                              context,
+                                              listen: false,
+                                            );
+
+                                            noteProvider.selectedNotebookName =
+                                                snapshot.data![index].name;
+                                            noteProvider.selectedNotebook =
+                                                snapshot.data![index].id!;
+
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            snapshot.data![index].name,
+                                            style: const TextStyle(
+                                              color: primary,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -78,30 +78,31 @@ class _NotesBuilderState extends State<NotesBuilder> {
                                 ),
                                 Expanded(
                                   flex: 2,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: primaryLight,
-                                      borderRadius: BorderRadius.circular(8),
+                                  child: FutureBuilder(
+                                    future: notebookProvider.notebookName(
+                                      note.notebookID ?? 0,
                                     ),
-                                    child: FutureBuilder(
-                                      future: notebookProvider.notebookName(
-                                        note.notebookID ?? 0,
-                                      ),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData ||
-                                            snapshot.data!.isEmpty) {
-                                          return Container();
-                                        }
-                                        return Text(
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData ||
+                                          snapshot.data!.isEmpty) {
+                                        return Container();
+                                      }
+                                      return Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: primaryLight,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
                                           snapshot.data!,
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(
                                             color: light,
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ],

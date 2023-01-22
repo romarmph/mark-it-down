@@ -47,9 +47,10 @@ CREATE TABLE tbl_notes(
     if (id == 0 && searchText.isEmpty) {
       notes = await db.query('tbl_notes', orderBy: 'id');
     } else if (searchText.isNotEmpty && id == 0) {
-      notes = await db.query('tbl_notes',
-          where: 'title LIKE ? AND content LIKE ?',
-          whereArgs: ['%$searchText%', '%$searchText%']);
+      notes = await db.rawQuery(
+        'SELECT * FROM tbl_notes WHERE title LIKE ? OR content LIKE ?',
+        ['%$searchText%', '%$searchText%'],
+      );
     } else {
       notes = await db.query(
         'tbl_notes',
