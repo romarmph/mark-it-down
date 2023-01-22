@@ -25,46 +25,66 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: background,
         title: const Text("My Notes"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            TextField(
-              onChanged: (value) {
-                if (_searchController.text.isNotEmpty) {
-                  provider.searchText = _searchController.text;
-                  provider.setNotebookID = 0;
-                } else {
-                  provider.searchText = "";
-                  provider.setNotebookID = 0;
-                }
-              },
-              textAlignVertical: TextAlignVertical.center,
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: "Search Notes",
-                suffixIcon: IconButton(
-                  focusColor: primaryLight,
-                  onPressed: () {
-                    if (_searchController.text.isNotEmpty) {
-                      provider.searchText = _searchController.text;
-                      provider.setNotebookID = 0;
-                    } else {
-                      provider.searchText = "";
-                      provider.setNotebookID = 0;
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.search,
-                  ),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          TextEditingController().clear();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              TextField(
+                onChanged: (value) {
+                  if (_searchController.text.isNotEmpty) {
+                    provider.searchText = _searchController.text;
+                    provider.setNotebookID = 0;
+                  } else {
+                    provider.searchText = "";
+                    provider.setNotebookID = 0;
+                  }
+                },
+                textAlignVertical: TextAlignVertical.center,
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: "Search Notes",
+                  suffixIcon: _searchController.text.isEmpty
+                      ? IconButton(
+                          focusColor: primaryLight,
+                          onPressed: () {
+                            if (_searchController.text.isNotEmpty) {
+                              provider.searchText = _searchController.text;
+                              provider.setNotebookID = 0;
+                            } else {
+                              provider.searchText = "";
+                              provider.setNotebookID = 0;
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.search,
+                          ),
+                        )
+                      : IconButton(
+                          focusColor: primaryLight,
+                          onPressed: () {
+                            setState(() {
+                              _searchController.clear();
+                            });
+                            provider.searchText = "";
+                            provider.setNotebookID = 0;
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                          ),
+                        ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Expanded(
-              child: NotesBuilder(),
-            ),
-          ],
+              const SizedBox(height: 16),
+              const Expanded(
+                child: NotesBuilder(),
+              ),
+            ],
+          ),
         ),
       ),
       drawer: const MIDDrawer(),
