@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mark_it_down/constants/colors.dart';
+import 'package:mark_it_down/providers/notes_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/notebook_provider.dart';
 
@@ -13,11 +13,13 @@ class NotebookDropdown extends StatefulWidget {
 }
 
 class _NotebookDropdownState extends State<NotebookDropdown> {
-  var selectedNotebook = 0;
-
   @override
   Widget build(BuildContext context) {
     NotebookProvider notebookProvider = Provider.of<NotebookProvider>(context);
+    NotesProvider noteProvider = Provider.of<NotesProvider>(
+      context,
+      listen: false,
+    );
     return Container(
       decoration: BoxDecoration(
         color: light,
@@ -49,14 +51,10 @@ class _NotebookDropdownState extends State<NotebookDropdown> {
             borderRadius: BorderRadius.circular(8),
             isExpanded: true,
             menuMaxHeight: 400,
-            value: selectedNotebook,
+            value: noteProvider.selectedNotebook,
             items: itemList,
             onChanged: (value) async {
-              final shared = await SharedPreferences.getInstance();
-              setState(() {
-                shared.setInt('notebookID', value);
-                selectedNotebook = value;
-              });
+              noteProvider.selectedNotebook = value;
             },
           );
         },

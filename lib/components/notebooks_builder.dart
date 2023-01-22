@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mark_it_down/providers/notebook_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../components/alert_title.dart';
 import '../constants/colors.dart';
 import '../models/notebooks.dart';
+import '../providers/notebook_provider.dart';
+import '../providers/notes_provider.dart';
 
 class NotebooksBuilder extends StatefulWidget {
   const NotebooksBuilder({
@@ -57,7 +58,14 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                           notebook.name,
                           style: const TextStyle(fontSize: 16),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          final provider = Provider.of<NotesProvider>(
+                            context,
+                            listen: false,
+                          );
+                          provider.setNotebookID = notebook.id!;
+                          Navigator.of(context).pop();
+                        },
                         onLongPress: () {
                           showMenu(notebook);
                         },
@@ -128,7 +136,7 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
         return AlertDialog(
           backgroundColor: background,
           title: const AlertTitle(
-            title: "Edit notebook",
+            title: "Delete notebook",
           ),
           content: Text(
             "Are you sure to delete $notebook?",
@@ -153,8 +161,17 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                 backgroundColor: danger,
               ),
               onPressed: () {
-                NotebookProvider provider =
-                    Provider.of<NotebookProvider>(context, listen: false);
+                NotesProvider notesProvider = Provider.of<NotesProvider>(
+                  context,
+                  listen: false,
+                );
+
+                notesProvider.changeNotebookID(notebook.id!);
+
+                NotebookProvider provider = Provider.of<NotebookProvider>(
+                  context,
+                  listen: false,
+                );
                 provider.deleteNotebook(notebook.id!);
 
                 Navigator.of(context).pop();

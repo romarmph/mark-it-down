@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+
 import '../models/notebooks.dart';
 
 class NotebookDBHelper {
@@ -43,6 +44,24 @@ class NotebookDBHelper {
         : [];
 
     return notebookList;
+  }
+
+  Future<String> getNotebookName(int id) async {
+    Database db = await instance.database;
+
+    var notebooks = await db.query(
+      'tbl_notebooks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    List<Notebook> notebook = notebooks.isNotEmpty
+        ? notebooks.map((e) => Notebook.fromMap(e)).toList()
+        : [];
+
+    String name = notebook.first.name;
+
+    return name;
   }
 
   Future<int> createNotebook(Notebook notebook) async {

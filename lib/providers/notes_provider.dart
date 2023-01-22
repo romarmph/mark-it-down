@@ -6,11 +6,18 @@ import '../models/note.dart';
 class NotesProvider extends ChangeNotifier {
   int _notebookID = 0;
   List<Note> _noteList = [];
+  int _selectedNotebook = 0;
 
+  int get selectedNotebook => _selectedNotebook;
   int get notebookID => _notebookID;
 
   set setNotebookID(int id) {
     _notebookID = id;
+    notifyListeners();
+  }
+
+  set selectedNotebook(int value) {
+    _selectedNotebook = value;
     notifyListeners();
   }
 

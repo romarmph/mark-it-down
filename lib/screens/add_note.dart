@@ -18,7 +18,6 @@ class AddNoteScreen extends StatefulWidget {
 class _AddNoteScreenState extends State<AddNoteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-  int _notebookID = 0;
 
   @override
   void dispose() {
@@ -75,14 +74,12 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   }
 
   void addNote(NotesProvider noteProvider) async {
-    final prefs = await SharedPreferences.getInstance();
-
     noteProvider.addNote(
       Note(
         content: _contentController.text,
         title: _titleController.text,
         date: DateTime.now().toString(),
-        notebookID: prefs.getInt('notebookID')!,
+        notebookID: noteProvider.selectedNotebook,
       ),
     );
   }

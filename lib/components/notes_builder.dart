@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mark_it_down/providers/notebook_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/colors.dart';
@@ -18,9 +19,13 @@ class NotesBuilder extends StatefulWidget {
 class _NotesBuilderState extends State<NotesBuilder> {
   @override
   Widget build(BuildContext context) {
+    final notebookProvider = Provider.of<NotebookProvider>(
+      context,
+      listen: false,
+    );
     return Consumer<NotesProvider>(
       builder: (context, value, child) => FutureBuilder(
-        future: value.noteList,
+        future: value.noteList(value.notebookID),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -60,12 +65,41 @@ class _NotesBuilderState extends State<NotesBuilder> {
                                 fontSize: 18,
                               ),
                             ),
-                            Text(
-                              formatDate(DateTime.parse(note.date)),
-                              style: const TextStyle(
-                                color: primary,
-                                fontSize: 14,
-                              ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 8,
+                                  child: Text(
+                                    formatDate(DateTime.parse(note.date)),
+                                    style: const TextStyle(
+                                      color: primary,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: FutureBuilder(
+                                      future: notebookProvider.notebookName(
+                                        note.notebookID!,
+                                      ),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Container();
+                                        }
+                                        return Text(
+                                          snapshot.data!,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 8),
                           ],
@@ -79,7 +113,6 @@ class _NotesBuilderState extends State<NotesBuilder> {
                           ),
                         ),
                         onTap: () {
-                          print(note.notebookID);
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {

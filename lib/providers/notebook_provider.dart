@@ -12,6 +12,12 @@ class NotebookProvider extends ChangeNotifier {
     return _notebookList;
   }
 
+  Future<String> notebookName(int id) async {
+    String name = await NotebookDBHelper.instance.getNotebookName(id);
+    notifyListeners();
+    return name;
+  }
+
   void addNotebook(Notebook notebook) async {
     await NotebookDBHelper.instance.createNotebook(notebook);
     notifyListeners();
