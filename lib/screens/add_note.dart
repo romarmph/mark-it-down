@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mark_it_down/constants/colors.dart';
+import 'package:mark_it_down/models/notebooks.dart';
+import 'package:mark_it_down/providers/notebook_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../components/dropdown.dart';
 import '../models/note.dart';
 import '../providers/notes_provider.dart';
 
@@ -29,6 +30,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   @override
   Widget build(BuildContext context) {
     NotesProvider noteProvider = Provider.of<NotesProvider>(context);
+    NotebookProvider notebookProvider = Provider.of<NotebookProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create note"),
@@ -44,7 +46,40 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const NotebookDropdown(),
+            Row(
+              children: [
+                const Text(
+                  "Notebook",
+                  style: TextStyle(
+                    color: greyMute,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showNotebooks();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(12),
+                        backgroundColor: light,
+                        foregroundColor: primary,
+                        shadowColor: greyMute,
+                        elevation: 0),
+                    child: Text(
+                      noteProvider.selectedNotebookName.isEmpty
+                          ? "None"
+                          : noteProvider.selectedNotebookName,
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
             Expanded(
               child: TextField(
@@ -66,6 +101,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
           if (_titleController.text.isNotEmpty) {
             addNote(noteProvider);
           }
+          noteProvider.selectedNotebookName = "";
           Navigator.of(context).pop();
         },
         child: const Icon(Icons.save),
@@ -81,6 +117,99 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         date: DateTime.now().toString(),
         notebookID: noteProvider.selectedNotebook,
       ),
+    );
+  }
+
+  void showNotebooks() {
+    showModalBottomSheet(
+      barrierColor: const Color.fromARGB(50, 0, 0, 0),
+      backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          height: 400,
+          width: double.infinity,
+          child: Center(
+            child: SizedBox(
+              width: 300,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: Consumer<NotebookProvider>(
+                      builder: (context, provider, child) {
+                        return FutureBuilder(
+                          future: provider.notebookList,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text("No notebooks available"),
+                              );
+                            }
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              elevation: 16,
+                              child: ListView.builder(
+                                itemCount: snapshot.data!.length,
+                                itemBuilder: (context, index) {
+                                  return TextButton(
+                                    onPressed: () {
+                                      final noteProvider =
+                                          Provider.of<NotesProvider>(
+                                        context,
+                                        listen: false,
+                                      );
+
+                                      noteProvider.selectedNotebookName =
+                                          snapshot.data![index].name;
+                                      noteProvider.selectedNotebook =
+                                          snapshot.data![index].id!;
+
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      snapshot.data![index].name,
+                                      style: const TextStyle(
+                                        color: primary,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        elevation: 16,
+                        backgroundColor: light,
+                        foregroundColor: primary,
+                        padding: const EdgeInsets.all(16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        )),
+                    onPressed: () {},
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

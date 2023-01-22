@@ -7,9 +7,16 @@ class NotesProvider extends ChangeNotifier {
   int _notebookID = 0;
   List<Note> _noteList = [];
   int _selectedNotebook = 0;
+  String _selectedNotebookName = "";
 
+  String get selectedNotebookName => _selectedNotebookName;
   int get selectedNotebook => _selectedNotebook;
   int get notebookID => _notebookID;
+
+  set selectedNotebookName(String name) {
+    _selectedNotebookName = name;
+    notifyListeners();
+  }
 
   set setNotebookID(int id) {
     _notebookID = id;
