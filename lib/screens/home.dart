@@ -20,21 +20,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<NotesProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: background,
-        title: const Text("My Notes"),
-      ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-          TextEditingController().clear();
-        },
-        child: Padding(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        TextEditingController().clear();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: background,
+          title: const Text("My Notes"),
+        ),
+        body: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
             children: [
               TextField(
+                autofocus: false,
                 onChanged: (value) {
                   if (_searchController.text.isNotEmpty) {
                     provider.searchText = _searchController.text;
@@ -86,20 +87,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-      ),
-      drawer: const MIDDrawer(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return const AddNoteScreen();
-              },
-            ),
-          );
-        },
-        label: const Text("Create"),
-        icon: const Icon(Icons.add),
+        drawer: const MIDDrawer(),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return const AddNoteScreen();
+                },
+              ),
+            );
+          },
+          label: const Text("Create"),
+          icon: const Icon(Icons.add),
+        ),
       ),
     );
   }
