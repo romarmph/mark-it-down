@@ -39,10 +39,21 @@ CREATE TABLE tbl_notes(
     await db.execute(notes);
   }
 
-  Future<List<Note>> getNotes() async {
+  Future<List<Note>> getNotes(int id) async {
     Database db = await instance.database;
 
-    var notes = await db.query('tbl_notes', orderBy: 'id');
+    var notes = [];
+
+    if (id == 0) {
+      notes = await db.query('tbl_notes', orderBy: 'id');
+    } else {
+      notes = await db.query(
+        'tbl_notes',
+        orderBy: 'id',
+        where: 'notebookID = ?',
+        whereArgs: [id],
+      );
+    }
     List<Note> notesList = notes.isNotEmpty
         ? notes.map((note) => Note.fromMap(note)).toList()
         : [];
@@ -50,20 +61,17 @@ CREATE TABLE tbl_notes(
     return notesList;
   }
 
-  Future<List<Note>> getNotesByID(int id) async {
+  Future<int> updateNotebookID(int id) async {
     Database db = await instance.database;
 
-    var notes = await db.query(
+    return await db.update(
       'tbl_notes',
-      orderBy: 'id',
-      where: 'id = ?',
+      {
+        'notebookID': 0,
+      },
+      where: 'notebookID = ?',
       whereArgs: [id],
     );
-    List<Note> notesList = notes.isNotEmpty
-        ? notes.map((note) => Note.fromMap(note)).toList()
-        : [];
-
-    return notesList;
   }
 
   Future<Note> getSingleNote(int id) async {

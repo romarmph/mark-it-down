@@ -4,12 +4,27 @@ import '../database/notedb_helper.dart';
 import '../models/note.dart';
 
 class NotesProvider extends ChangeNotifier {
+  int _notebookID = 0;
   List<Note> _noteList = [];
 
-  Future<List<Note>> get noteList async {
-    _noteList = await NotesDBHelper.instance.getNotes();
+  int get notebookID => _notebookID;
+
+  set setNotebookID(int id) {
+    _notebookID = id;
+    notifyListeners();
+  }
+
+  Future<List<Note>> noteList(int notebookID) async {
+    _noteList = await NotesDBHelper.instance.getNotes(_notebookID);
+
     notifyListeners();
     return _noteList;
+  }
+
+  void changeNotebookID(int id) async {
+    await NotesDBHelper.instance.updateNotebookID(id);
+    _notebookID = 0;
+    notifyListeners();
   }
 
   Future<Note> getNote(int id) async {
