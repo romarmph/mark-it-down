@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mark_it_down/providers/notebook_provider.dart';
 import 'package:mark_it_down/providers/notes_provider.dart';
 import 'package:mark_it_down/screens/edit_note.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -24,6 +25,10 @@ class ViewNoteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notebookProvider = Provider.of<NotebookProvider>(
+      context,
+      listen: false,
+    );
     return Consumer<NotesProvider>(
       builder: (context, value, child) => Scaffold(
         appBar: AppBar(
@@ -51,12 +56,47 @@ class ViewNoteScreen extends StatelessWidget {
                     Container(
                       color: light,
                       child: ListTile(
-                        title: Text(
-                          note.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        title: Row(
+                          children: [
+                            Expanded(
+                              flex: 6,
+                              child: Text(
+                                note.title,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: primaryLight,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: FutureBuilder(
+                                  future: notebookProvider.notebookName(
+                                    note.notebookID ?? 0,
+                                  ),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData ||
+                                        snapshot.data!.isEmpty) {
+                                      return Container();
+                                    }
+                                    return Text(
+                                      snapshot.data!,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: light,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         subtitle: Text(
                           formatDate(
