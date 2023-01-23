@@ -38,6 +38,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         child: Column(
           children: [
             TextField(
+              maxLength: 32,
               controller: _titleController,
               decoration: const InputDecoration(
                 hintText: "Title",

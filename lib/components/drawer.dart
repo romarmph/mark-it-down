@@ -99,6 +99,7 @@ class _MIDDrawerState extends State<MIDDrawer> {
             title: "Add notebook",
           ),
           content: TextField(
+            maxLength: 12,
             controller: _notebookController,
             decoration: const InputDecoration(
               hintText: "Notebook name",
