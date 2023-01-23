@@ -42,6 +42,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
               controller: _titleController,
               decoration: const InputDecoration(
                 hintText: "Title",
+                counterText: "",
               ),
             ),
             const SizedBox(height: 16),

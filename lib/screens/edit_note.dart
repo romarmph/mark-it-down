@@ -41,8 +41,10 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
         child: Column(
           children: [
             TextField(
+              maxLength: 32,
               controller: _titleController,
               decoration: const InputDecoration(
+                counterText: "",
                 hintText: "Title",
               ),
             ),

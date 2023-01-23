@@ -103,6 +103,7 @@ class _MIDDrawerState extends State<MIDDrawer> {
             controller: _notebookController,
             decoration: const InputDecoration(
               hintText: "Notebook name",
+              counterText: "",
             ),
           ),
           contentPadding: const EdgeInsets.all(16),
