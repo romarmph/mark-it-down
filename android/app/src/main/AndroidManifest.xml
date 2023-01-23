@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mark_it_down">
    <application
-        android:label="mark_it_down"
+        android:label="Mark It Down"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
