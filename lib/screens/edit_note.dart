@@ -112,6 +112,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
               title: _titleController.text,
               date: DateTime.now().toString(),
               notebookID: provider.selectedNotebook,
+              notebookName: provider.selectedNotebookName,
             ),
           );
 

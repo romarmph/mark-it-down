@@ -117,6 +117,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         title: _titleController.text,
         date: DateTime.now().toString(),
         notebookID: noteProvider.selectedNotebook,
+        notebookName: noteProvider.selectedNotebookName,
       ),
     );
   }

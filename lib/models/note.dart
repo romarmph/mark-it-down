@@ -1,6 +1,7 @@
 class Note {
   final int? id;
   final int? notebookID;
+  final String? notebookName;
   final String title;
   final String content;
   final String date;
@@ -8,6 +9,7 @@ class Note {
   const Note({
     this.id,
     this.notebookID,
+    this.notebookName,
     required this.content,
     required this.title,
     required this.date,
@@ -17,6 +19,7 @@ class Note {
     return Note(
       id: json['id'],
       notebookID: json['notebookID'],
+      notebookName: json['notebookName'],
       title: json['title'],
       content: json['content'].toString(),
       date: json['date'],
@@ -27,6 +30,7 @@ class Note {
     return {
       'id': id,
       'notebookID': notebookID,
+      'notebookName': notebookName,
       'title': title,
       'content': content,
       'date': date,

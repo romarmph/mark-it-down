@@ -30,6 +30,7 @@ class NotesDBHelper {
 CREATE TABLE tbl_notes(
   id INTEGER PRIMARY KEY,
   notebookID INTEGER,
+  notebookName TEXT,
   title TEXT,
   content TEX,
   date TEXT
@@ -48,8 +49,8 @@ CREATE TABLE tbl_notes(
       notes = await db.query('tbl_notes', orderBy: 'id');
     } else if (searchText.isNotEmpty && id == 0) {
       notes = await db.rawQuery(
-        'SELECT * FROM tbl_notes WHERE title LIKE ? OR content LIKE ?',
-        ['%$searchText%', '%$searchText%'],
+        'SELECT * FROM tbl_notes WHERE title LIKE ? OR content LIKE ? OR notebookName LIKE ?',
+        ['%$searchText%', '%$searchText%', '%$searchText%'],
       );
     } else {
       notes = await db.query(
