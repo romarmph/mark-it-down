@@ -13,15 +13,18 @@ import 'package:intl/intl.dart';
 import '../constants/colors.dart';
 import '../models/note.dart';
 
+// ignore: must_be_immutable
 class ViewNoteScreen extends StatelessWidget {
-  const ViewNoteScreen({
+  ViewNoteScreen({
     super.key,
     required this.id,
     required this.passed,
   });
 
   final int id;
-  final Note passed;
+  Note passed;
+  int notebookID = 0;
+  String notebookName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +52,7 @@ class ViewNoteScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var note = snapshot.data!;
+              passed = snapshot.data!;
               return Padding(
                 padding: const EdgeInsets.all(8),
                 child: Column(
@@ -79,6 +83,8 @@ class ViewNoteScreen extends StatelessWidget {
                                       snapshot.data!.isEmpty) {
                                     return Container();
                                   }
+                                  notebookID = note.notebookID!;
+                                  notebookName = snapshot.data!;
                                   return Container(
                                     padding: const EdgeInsets.all(4),
                                     decoration: BoxDecoration(
@@ -164,10 +170,12 @@ class ViewNoteScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            value.selectedNotebook = notebookID;
+            value.selectedNotebookName = notebookName;
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => EditNoteScreen(
-                  noteID: passed.id!,
+                  note: passed,
                 ),
               ),
             );
@@ -221,6 +229,14 @@ class ViewNoteScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  int setNotebookID(int id) {
+    return id;
+  }
+
+  String setNotebookName(String name) {
+    return name;
   }
 
   String formatDate(DateTime dateTime) {

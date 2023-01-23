@@ -178,7 +178,7 @@ class _NotesBuilderState extends State<NotesBuilder> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => EditNoteScreen(
-                          noteID: note.id!,
+                          note: note,
                         ),
                       ),
                     );
