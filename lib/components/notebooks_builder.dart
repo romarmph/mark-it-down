@@ -19,6 +19,8 @@ class NotebooksBuilder extends StatefulWidget {
 class _NotebooksBuilderState extends State<NotebooksBuilder> {
   final _notebookController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<NotebookProvider>(
@@ -198,10 +200,26 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
           title: const AlertTitle(
             title: "Edit notebook",
           ),
-          content: TextField(
-            controller: _notebookController,
-            decoration: InputDecoration(
-              hintText: notebook.name,
+          content: Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: _notebookController,
+              decoration: InputDecoration(
+                hintText: notebook.name,
+                errorBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: danger,
+                    width: 2,
+                  ),
+                ),
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Enter notebook name";
+                } else {
+                  return null;
+                }
+              },
             ),
           ),
           actions: [
@@ -221,23 +239,25 @@ class _NotebooksBuilderState extends State<NotebooksBuilder> {
                 backgroundColor: primary,
               ),
               onPressed: () {
-                NotebookProvider provider = Provider.of<NotebookProvider>(
-                  context,
-                  listen: false,
-                );
-                if (_notebookController.text.isNotEmpty) {
-                  Navigator.of(context).pop();
-                  provider.editNotebook(
-                    Notebook(
-                      id: notebook.id,
-                      name: _notebookController.text,
-                    ),
+                if (_formKey.currentState!.validate()) {
+                  NotebookProvider provider = Provider.of<NotebookProvider>(
+                    context,
+                    listen: false,
                   );
-                  setState(() {
-                    _notebookController.clear();
-                  });
+                  if (_notebookController.text.isNotEmpty) {
+                    Navigator.of(context).pop();
+                    provider.editNotebook(
+                      Notebook(
+                        id: notebook.id,
+                        name: _notebookController.text,
+                      ),
+                    );
+                    setState(() {
+                      _notebookController.clear();
+                    });
+                  }
+                  Navigator.of(context).pop();
                 }
-                Navigator.of(context).pop();
               },
               child: const Text(
                 "Save",

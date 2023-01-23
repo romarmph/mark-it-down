@@ -19,6 +19,8 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     _titleController.clear();
@@ -29,83 +31,107 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   @override
   Widget build(BuildContext context) {
     NotesProvider noteProvider = Provider.of<NotesProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Create note"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            TextField(
-              maxLength: 32,
-              controller: _titleController,
-              decoration: const InputDecoration(
-                hintText: "Title",
-                counterText: "",
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                const Text(
-                  "Notebook",
-                  style: TextStyle(
-                    color: greyMute,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showNotebooks();
-                    },
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(12),
-                        backgroundColor: light,
-                        foregroundColor: primary,
-                        shadowColor: greyMute,
-                        elevation: 0),
-                    child: Text(
-                      noteProvider.selectedNotebookName.isEmpty
-                          ? "None"
-                          : noteProvider.selectedNotebookName,
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
+    return Form(
+      key: _formKey,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              noteProvider.selectedNotebook = 0;
+              noteProvider.selectedNotebookName = "";
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+          title: const Text("Create note"),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            children: [
+              TextFormField(
+                maxLength: 32,
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  hintText: "Title",
+                  counterText: "",
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: danger,
+                      width: 2,
                     ),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: TextField(
-                controller: _contentController,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                expands: true,
-                textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(
-                  hintText: "Write your thoughts here...",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Enter note name";
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  const Text(
+                    "Notebook",
+                    style: TextStyle(
+                      color: greyMute,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showNotebooks();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(12),
+                          backgroundColor: light,
+                          foregroundColor: primary,
+                          shadowColor: greyMute,
+                          elevation: 0),
+                      child: Text(
+                        noteProvider.selectedNotebookName.isEmpty
+                            ? "None"
+                            : noteProvider.selectedNotebookName,
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: TextField(
+                  controller: _contentController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  expands: true,
+                  textAlignVertical: TextAlignVertical.top,
+                  decoration: const InputDecoration(
+                    hintText: "Write your thoughts here...",
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_titleController.text.isNotEmpty) {
-            addNote(noteProvider);
-          }
-          noteProvider.selectedNotebookName = "";
-          noteProvider.selectedNotebook = 0;
-          Navigator.of(context).pop();
-        },
-        child: const Icon(Icons.save),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              addNote(noteProvider);
+              Navigator.of(context).pop();
+              noteProvider.selectedNotebookName = "";
+              noteProvider.selectedNotebook = 0;
+            }
+          },
+          child: const Icon(Icons.save),
+        ),
       ),
     );
   }

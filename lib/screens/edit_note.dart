@@ -22,6 +22,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     _titleController.text = widget.note.title;
@@ -40,12 +42,28 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            TextField(
-              maxLength: 32,
-              controller: _titleController,
-              decoration: const InputDecoration(
-                counterText: "",
-                hintText: "Title",
+            Form(
+              key: _formKey,
+              child: TextFormField(
+                maxLength: 32,
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  counterText: "",
+                  hintText: "Title",
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: danger,
+                      width: 2,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Enter note name";
+                  } else {
+                    return null;
+                  }
+                },
               ),
             ),
             const SizedBox(height: 16),
@@ -101,24 +119,26 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          NotesProvider provider = Provider.of<NotesProvider>(
-            context,
-            listen: false,
-          );
-          provider.editNote(
-            Note(
-              id: widget.note.id,
-              content: _contentController.text,
-              title: _titleController.text,
-              date: DateTime.now().toString(),
-              notebookID: provider.selectedNotebook,
-              notebookName: provider.selectedNotebookName,
-            ),
-          );
+          if (_formKey.currentState!.validate()) {
+            NotesProvider provider = Provider.of<NotesProvider>(
+              context,
+              listen: false,
+            );
+            provider.editNote(
+              Note(
+                id: widget.note.id,
+                content: _contentController.text,
+                title: _titleController.text,
+                date: DateTime.now().toString(),
+                notebookID: provider.selectedNotebook,
+                notebookName: provider.selectedNotebookName,
+              ),
+            );
 
-          provider.selectedNotebook = 0;
-          provider.selectedNotebookName = "";
-          Navigator.of(context).pop();
+            provider.selectedNotebook = 0;
+            provider.selectedNotebookName = "";
+            Navigator.of(context).pop();
+          }
         },
         child: const Icon(Icons.save),
       ),

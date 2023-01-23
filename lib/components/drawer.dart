@@ -19,6 +19,8 @@ class MIDDrawer extends StatefulWidget {
 class _MIDDrawerState extends State<MIDDrawer> {
   final _notebookController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -93,60 +95,81 @@ class _MIDDrawerState extends State<MIDDrawer> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: background,
-          title: const AlertTitle(
-            title: "Add notebook",
-          ),
-          content: TextField(
-            maxLength: 12,
-            controller: _notebookController,
-            decoration: const InputDecoration(
-              hintText: "Notebook name",
-              counterText: "",
+        return Form(
+          key: _formKey,
+          child: AlertDialog(
+            backgroundColor: background,
+            title: const AlertTitle(
+              title: "Add notebook",
             ),
-          ),
-          contentPadding: const EdgeInsets.all(16),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                "Cancel",
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primary,
-              ),
-              onPressed: () {
-                NotebookProvider provider = Provider.of<NotebookProvider>(
-                  context,
-                  listen: false,
-                );
-                provider.addNotebook(
-                  Notebook(
-                    name: _notebookController.text,
+            content: TextFormField(
+              maxLength: 12,
+              controller: _notebookController,
+              decoration: const InputDecoration(
+                hintText: "Notebook name",
+                counterText: "",
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: danger,
+                    width: 1,
                   ),
-                );
-                setState(() {
-                  _notebookController.clear();
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                "Add Notebook",
-                style: TextStyle(
-                  fontSize: 16,
                 ),
               ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Enter notebook name";
+                } else {
+                  return null;
+                }
+              },
             ),
-          ],
+            contentPadding: const EdgeInsets.all(16),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _notebookController.clear();
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primary,
+                ),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    NotebookProvider provider = Provider.of<NotebookProvider>(
+                      context,
+                      listen: false,
+                    );
+                    provider.addNotebook(
+                      Notebook(
+                        name: _notebookController.text,
+                      ),
+                    );
+                    setState(() {
+                      _notebookController.clear();
+                    });
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const Text(
+                  "Add Notebook",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
