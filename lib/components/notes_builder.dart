@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mark_it_down/models/note.dart';
+import 'package:mark_it_down/screens/edit_note.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/notebook_provider.dart';
 import '../constants/colors.dart';
 import '../providers/notes_provider.dart';
 import '../screens/view_note.dart';
+import 'alert_title.dart';
 
 class NotesBuilder extends StatefulWidget {
   const NotesBuilder({
@@ -137,7 +140,9 @@ class _NotesBuilderState extends State<NotesBuilder> {
                             ),
                           );
                         },
-                        onLongPress: () {},
+                        onLongPress: () {
+                          showMenu(note);
+                        },
                       ),
                     );
                   },
@@ -150,5 +155,117 @@ class _NotesBuilderState extends State<NotesBuilder> {
   String formatDate(DateTime dateTime) {
     final DateFormat formatter = DateFormat("MMM d, yyyy | h:mm a");
     return formatter.format(dateTime);
+  }
+
+  void showMenu(Note note) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: background,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EditNoteScreen(
+                          noteID: note.id!,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Edit",
+                    style: TextStyle(
+                      color: primary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    deleteConfirmation(note);
+                  },
+                  child: const Text(
+                    "Delete",
+                    style: TextStyle(
+                      color: danger,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void deleteConfirmation(Note note) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: background,
+          title: const AlertTitle(
+            title: "Delete notebook",
+          ),
+          content: Text(
+            "Are you sure to delete '${note.title}'?",
+            style: const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Cancel",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: danger,
+              ),
+              onPressed: () {
+                NotesProvider notesProvider = Provider.of<NotesProvider>(
+                  context,
+                  listen: false,
+                );
+
+                notesProvider.deleteNote(note.id!);
+
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Yes, delete",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
