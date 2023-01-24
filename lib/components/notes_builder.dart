@@ -74,6 +74,7 @@ class _NotesBuilderState extends State<NotesBuilder> {
                                   flex: 6,
                                   child: Text(
                                     note!.title,
+                                    overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       fontSize: 18,
                                     ),
@@ -100,6 +101,7 @@ class _NotesBuilderState extends State<NotesBuilder> {
                                         child: Text(
                                           snapshot.data!,
                                           textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                             color: light,
                                           ),

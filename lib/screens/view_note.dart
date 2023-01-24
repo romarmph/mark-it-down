@@ -66,6 +66,7 @@ class ViewNoteScreen extends StatelessWidget {
                               flex: 6,
                               child: Text(
                                 note.title,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
@@ -93,6 +94,7 @@ class ViewNoteScreen extends StatelessWidget {
                                     ),
                                     child: Text(
                                       snapshot.data!,
+                                      overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                         color: light,
