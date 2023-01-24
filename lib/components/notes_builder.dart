@@ -123,9 +123,8 @@ class _NotesBuilderState extends State<NotesBuilder> {
                           ],
                         ),
                         subtitle: Text(
-                          note.content.split('\n').elementAt(0).length > 32
-                              ? note.content.replaceRange(36, null, "...")
-                              : note.content.split('\n').elementAt(0),
+                          note.content.split('\n').elementAt(0),
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 16,
                           ),
